@@ -1,0 +1,25 @@
+// Already wired for you (this was LU 2.3's work). You do NOT need to edit this.
+// It reads the ['threads'] query — the SAME key you'll invalidate after a successful post.
+import { useQuery } from "@tanstack/react-query";
+import { getThreads } from "../services/threads.service";
+
+export default function ThreadList() {
+  const { data, isPending, isError, error } = useQuery({
+    queryKey: ["threads"],
+    queryFn: getThreads,
+  });
+
+  if (isPending) return <p>Loading threads…</p>;
+  if (isError) return <p className="err">Error: {error.message}</p>;
+
+  return (
+    <ul className="threads">
+      {data.map((t) => (
+        <li className="card" key={t.id}>
+          <h3>{t.title}</h3>
+          <p>{t.body}</p>
+        </li>
+      ))}
+    </ul>
+  );
+}
